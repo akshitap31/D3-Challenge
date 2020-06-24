@@ -1,23 +1,27 @@
-var width = parseInt(d3.select("#scatter").style("width"));
-var height = width - width / 3.9;
-var labelArea= 110
-var margin = 20;
-var tpadBottom=40;
-var tpadLeft=40; 
-// var width = svgWidth - margin.left - margin.right;
-// var height = svgHeight - margin.top - margin.bottom;
+var svgWidth = parseInt(d3.select("#scatter").style("width"));
+var svgHeight = width - width / 3.9;;
+
+var margin = {
+  top: 20,
+  right: 40,
+  bottom: 80,
+  left: 100
+};
+
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 var svg = d3
   .select("#scatter")
   .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+  .attr("width", svgWidth)
+  .attr("height", svgHeight);
 
 // Append an SVG group
 var chartGroup = svg.append("g")
-  .attr("transform", `translate(${margin}, ${margin})`);
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Initial Params
 var chosenXAxis = "poverty";
@@ -29,7 +33,7 @@ function xScale(data, chosenXAxis) {
     .domain([d3.min(data, d => d[chosenXAxis]),
       d3.max(data, d => d[chosenXAxis])
     ])
-    .range([margin+labelArea, width-margin]);
+    .range([0, width]);
 
   return xLinearScale;
 
@@ -40,7 +44,7 @@ function yScale(data, chosenYAxis) {
     .domain([d3.min(data, d => d[chosenYAxis]),
       d3.max(data, d => d[chosenYAxis])
     ])
-    .range([height-margin-labelArea, margin]);
+    .range([height, 0]);
 
   return yLinearScale;
 
