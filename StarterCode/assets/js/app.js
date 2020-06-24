@@ -1,5 +1,8 @@
-var svgWidth = parseInt(d3.select("#scatter").style("width"));
-var svgHeight = width - width / 3.9;;
+var svgWidth = 960;
+var svgHeight = 500;
+
+// var svgWidth = parseInt(d3.select("#scatter").style("width"));
+// var svgHeight = width - width / 3.9;;
 
 var margin = {
   top: 20,
