@@ -1,12 +1,17 @@
-var svgWidth = 960;
-var svgHeight = 500;
+function resize(){
+  var svgArea = d3.select("#scatter").select("svg");
+  var svgWidth= parseInt(d3.select("#scatter").style("width"));
+  var svgHeight= svgWidth - svgWidth / 3.9;
 
-// var svgWidth = parseInt(d3.select("#scatter").style("width"));
-// var svgHeight = width - width / 3.9;;
-
+  if (!svgArea.empty()) {
+    svgArea.remove();
+  }
+ 
+// var w = parseInt(d3.select("#scatter").style("width"));
+// var h = w - w / 3.9;
 var margin = {
   top: 20,
-  right: 40,
+  right: 100,
   bottom: 80,
   left: 100
 };
@@ -133,11 +138,10 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
   }
 
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
-    // .classed("d3-tip", true)
+    .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${ylabel}${d[chosenYAxis]}%<br>${xlabel} ${d[chosenXAxis]}`);
+      return (`${d.state}<br>{ylabel}${d[chosenYAxis]}%<br>${xlabel} ${d[chosenXAxis]}`);
     });
 
   circlesGroup.call(toolTip);
@@ -186,7 +190,6 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
   // append y axis
   var yAxis = chartGroup.append("g")
     .classed("y-axis", true)
-    .attr("transform", `translate(0, 0)`)
     .call(leftAxis);
 
   // append initial circles
@@ -196,13 +199,19 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 20)
+    .attr("r", 16)
     .classed("stateCircle", true)
     .attr("opacity", ".5");
-  // circlesGroup.
   
-  // append("text")
-  //   .text(d=> d.abbr)
+    var abbrText= chartGroup.selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("x", d => xLinearScale(d[chosenXAxis]))
+    .attr("y", d => yLinearScale(d[chosenYAxis]))
+    .attr("class", "stateText")
+    .text(d=> d.abbr)
+
   // Create group for three x-axis labels
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -233,36 +242,30 @@ var ylabelsGroup = chartGroup.append("g")
 .attr("transform", "rotate(-90)")
 // .attr("y", 0 - margin.left)
 // .attr("x", 0 - (height / 2))
-// .attr("dy", "1em")
+.attr("dy", "1em")
   
 
   var obesityLabel = ylabelsGroup.append("text")
-    .attr("x", -200)
-    .attr("y", -20)
+    .attr("x", 0 - (height / 2))
+    .attr("y", 20 - margin.left)
     .attr("value", "obesity") // value to grab for event listener
     .classed("active", true)
     .text("Obesity (%)");
 
   var smokesLabel = ylabelsGroup.append("text")
-    .attr("x", -200)
-    .attr("y", -40)
+    .attr("x", 0 - (height / 2))
+    .attr("y", 40 - margin.left)
     .attr("value", "smokes") // value to grab for event listener
     .classed("inactive", true)
-    .text("Smpokes (%)");
+    .text("Smokes (%)");
 
 
 var healthcareLabel = ylabelsGroup.append("text")
-    .attr("x", -200)
-    .attr("y", -60)
+    .attr("x", 0 - (height / 2))
+    .attr("y", 60 - margin.left)
     .attr("value", "healthcare") // value to grab for event listener
     .classed("inactive", true)
-    .text("Healthcare (%)");
-
-//   // append y axis
-//   chartGroup.append("text")
-//     .attr("y", 0 - margin.left)
-//     .attr("x", 0 - (height / 2))
-//     .attr("dy", "1em")
+    .text("Lacks Healthcare (%)");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -382,3 +385,7 @@ var healthcareLabel = ylabelsGroup.append("text")
 }).catch(function(error) {
   console.log(error);
 });
+  };
+resize()
+
+d3.select(window).on("resize", resize)
