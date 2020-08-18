@@ -78,12 +78,21 @@ function renderYAxes(newYScale, yAxis) {
 }
 // function used for updating circles group with a transition to
 // new circles
-function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis, chartGroup) {
 
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]))
     .attr("cy", d=> newYScale(d[chosenYAxis]));
+  
+  // chartGroup.selectAll("text")
+  //   .data(data)
+  //   .enter()
+  //   .append("text")
+  //   .attr("x", d => xLinearScale(d[chosenXAxis]))
+  //   .attr("y", d => yLinearScale(d[chosenYAxis]))
+  //   .attr("class", "stateText")
+  //   .text(d=> d.abbr);
 
   return circlesGroup;
 }
@@ -141,7 +150,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>{ylabel}${d[chosenYAxis]}%<br>${xlabel} ${d[chosenXAxis]}`);
+      return (`${d.state}<br>${ylabel}${d[chosenYAxis]}%<br>${xlabel} ${d[chosenXAxis]}`);
     });
 
   circlesGroup.call(toolTip);
@@ -200,10 +209,11 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 16)
-    .classed("stateCircle", true)
+    // .attr("class", d=> )
+    .attr("class", "stateCircle")
     .attr("opacity", ".5");
   
-    var abbrText= chartGroup.selectAll("text")
+    abbrText= chartGroup.selectAll("text")
     .data(data)
     .enter()
     .append("text")
@@ -280,7 +290,7 @@ var healthcareLabel = ylabelsGroup.append("text")
       console.log(chosenYAxis)
       yLinearScale = yScale(data, chosenYAxis);
       yAxis= renderYAxes(yLinearScale, yAxis);
-      circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
+      circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis, chartGroup);
 
         // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -317,6 +327,7 @@ var healthcareLabel = ylabelsGroup.append("text")
       .classed("active", true)
       .classed("inactive", false);
       }
+
      }
     });
   // x axis labels event listener
@@ -339,7 +350,7 @@ var healthcareLabel = ylabelsGroup.append("text")
         xAxis = renderAxes(xLinearScale, xAxis);
        
         // updates circles with new x values
-        circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
+        circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis, chartGroup);
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -384,8 +395,8 @@ var healthcareLabel = ylabelsGroup.append("text")
     });
 }).catch(function(error) {
   console.log(error);
-});
-  };
+}); 
+};
 resize()
 
 d3.select(window).on("resize", resize)
