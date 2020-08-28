@@ -7,7 +7,7 @@ The purpose of this project is to see health risks facing particular demographic
 * CSS
 
 ## How to run the code
-Go to [this link](https://akshitap31.github.io/D3-Challenge/index.html), you can change the X and Y axis by clicking on the inactive one's, you can also hover over the plots to see data, and scroll down for observations noted.
+Go to [this link](https://akshitap31.github.io/Health-Risk-demog-D3.js/index.html), you can change the X and Y axis by clicking on the inactive one's, you can also hover over the plots to see data, and scroll down for observations noted.
 
 ## Output
 
