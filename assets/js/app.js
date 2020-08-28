@@ -82,8 +82,8 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
 
   circlesGroup.transition()
     .duration(1000)
-    .attr("cx", d => newXScale(d[chosenXAxis]))
-    .attr("cy", d=> newYScale(d[chosenYAxis]));
+    .attr("cy", d => newXScale(d[chosenXAxis]))
+    .attr("cx", d=> newYScale(d[chosenYAxis]));
   
   // chartGroup.selectAll("text")
   //   .data(data)
@@ -101,8 +101,8 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
 
       abbrGroup.transition()
           .duration(1000)
-          .attr("y", d => xLinearScale  (d[chosenXAxis]))
-          .attr("x", d => yLinearScale(d[chosenYAxis]));
+          .attr("x", d => xLinearScale  (d[chosenXAxis]))
+          .attr("y", d => yLinearScale(d[chosenYAxis]));
 
       return abbrGroup;
   }
