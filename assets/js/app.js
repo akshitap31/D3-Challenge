@@ -96,6 +96,16 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
 
   return circlesGroup;
 }
+    // function used for updating state abbr with a transition to new locations
+    function renderAbbr(abbrGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis) {
+
+      abbrGroup.transition()
+          .duration(1000)
+          .attr("y", d => xLinearScale  (d[chosenXAxis]))
+          .attr("x", d => yLinearScale(d[chosenYAxis]));
+
+      return abbrGroup;
+  }
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
@@ -212,17 +222,20 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     // .attr("class", d=> )
     .attr("class", "stateCircle")
     .attr("opacity", ".5");
-  
-    abbrText= chartGroup.selectAll("text")
+    var stateAbbr = chartGroup.append("g")
+    var abbrGroup = stateAbbr.selectAll("text")
     .data(data)
     .enter()
     .append("text")
+    .text(d => d.abbr)
     .attr("x", d => xLinearScale(d[chosenXAxis]))
-    .attr("y", d => yLinearScale(d[chosenYAxis]))
-    .attr("class", "stateText")
-    .text(d=> d.abbr)
+    .attr("y", d => yLinearScale(d[chosenYAxis]) + 3)
+    .attr("text-anchor", "middle")
+    // .style("fill", "white")
+    .style("font-size", "12px")
 
-  // Create group for three x-axis labels
+  // Create group for three x and y -axis labels
+
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
@@ -250,8 +263,6 @@ var incomeLabel = labelsGroup.append("text")
 
 var ylabelsGroup = chartGroup.append("g")
 .attr("transform", "rotate(-90)")
-// .attr("y", 0 - margin.left)
-// .attr("x", 0 - (height / 2))
 .attr("dy", "1em")
   
 
@@ -287,11 +298,11 @@ var healthcareLabel = ylabelsGroup.append("text")
 
      if (yvalue !== chosenYAxis) {
       chosenYAxis = yvalue;
-      console.log(chosenYAxis)
+      // console.log(chosenYAxis)
       yLinearScale = yScale(data, chosenYAxis);
       yAxis= renderYAxes(yLinearScale, yAxis);
       circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis, chartGroup);
-
+      abbrGroup = renderAbbr(abbrGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
         // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
       if (chosenYAxis === "obesity"){
@@ -340,7 +351,7 @@ var healthcareLabel = ylabelsGroup.append("text")
         // replaces chosenXAxis with value
         chosenXAxis = value;
         
-        console.log(chosenXAxis)
+        // console.log(chosenXAxis)
         
         // functions here found above csv import
         // updates x scale for new data
@@ -351,7 +362,7 @@ var healthcareLabel = ylabelsGroup.append("text")
        
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup,yLinearScale, chosenYAxis, xLinearScale, chosenXAxis, chartGroup);
-
+        abbrGroup = renderAbbr(abbrGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
